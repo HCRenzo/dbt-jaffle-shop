@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: >
+      Un registro por cliente. Renombra columnas de raw_customers a un
+      estándar consistente; no aplica joins ni lógica de negocio.
+    columns:
+      - name: customer_id
+        description: Identificador único del cliente.
+      - name: first_name
+        description: Nombre del cliente.
+      - name: last_name
+        description: Apellido del cliente.
+
+  - name: stg_orders
+    description: >
+      Un registro por orden. Renombra columnas de raw_orders y normaliza
+      "status" a "order_status" para evitar un nombre genérico.
+    columns:
+      - name: order_id
+        description: Identificador único de la orden.
+      - name: customer_id
+        description: Referencia al cliente que hizo la orden.
+      - name: order_date
+        description: Fecha en la que se realizó la orden.
+      - name: order_status
+        description: Estado de la orden (ej. placed, shipped, completed, returned).
+
+  - name: stg_payments
+    description: >
+      Un registro por pago. Renombra columnas de raw_payments y convierte
+      el monto de centavos a dólares (normalización de unidad, no lógica
+      de negocio).
+    columns:
+      - name: payment_id
+        description: Identificador único del pago.
+      - name: order_id
+        description: Referencia a la orden pagada.
+      - name: payment_method
+        description: Método de pago utilizado.
+      - name: payment_amount
+        description: Monto pagado, en dólares (convertido desde centavos).

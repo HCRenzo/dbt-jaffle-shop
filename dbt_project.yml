@@ -29,4 +29,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Iremos completando esta sección capa por capa (staging/intermediate/marts)
 # en los próximos pasos.
 models:
-  jaffle_shop: {}
+  jaffle_shop:
+    staging:
+      +materialized: view
