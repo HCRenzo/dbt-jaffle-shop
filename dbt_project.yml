@@ -32,3 +32,5 @@ models:
   jaffle_shop:
     staging:
       +materialized: view
+    intermediate:
+      +materialized: view

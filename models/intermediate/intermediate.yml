@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_orders_payments_joined
+    description: >
+      Un registro por orden, con el monto total pagado (suma de todos los
+      pagos asociados a esa orden). Une stg_orders con stg_payments y
+      cambia el grano de payments (varias filas por orden) a orders (una
+      fila por orden). Es la base para fct_orders y para el cálculo de
+      customer_lifetime_value en dim_customers.
+    columns:
+      - name: order_id
+        description: Identificador único de la orden.
+      - name: customer_id
+        description: Referencia al cliente que hizo la orden.
+      - name: order_date
+        description: Fecha en la que se realizó la orden.
+      - name: order_status
+        description: Estado de la orden.
+      - name: amount
+        description: >
+          Monto total pagado por la orden, en dólares. 0 si la orden no
+          tiene pagos registrados.
