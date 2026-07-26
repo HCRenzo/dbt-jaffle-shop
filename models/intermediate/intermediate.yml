@@ -11,6 +11,9 @@ models:
     columns:
       - name: order_id
         description: Identificador único de la orden.
+        tests:
+          - unique
+          - not_null
       - name: customer_id
         description: Referencia al cliente que hizo la orden.
       - name: order_date

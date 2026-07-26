@@ -8,8 +8,17 @@ models:
     columns:
       - name: order_id
         description: Identificador único de la orden.
+        tests:
+          - unique
+          - not_null
       - name: customer_id
         description: Referencia al cliente que hizo la orden (FK a dim_customers).
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
       - name: order_date
         description: Fecha en la que se realizó la orden.
       - name: order_status
@@ -24,6 +33,9 @@ models:
     columns:
       - name: customer_id
         description: Identificador único del cliente.
+        tests:
+          - unique
+          - not_null
       - name: first_name
         description: Nombre del cliente.
       - name: last_name

@@ -8,6 +8,9 @@ models:
     columns:
       - name: customer_id
         description: Identificador único del cliente.
+        tests:
+          - unique
+          - not_null
       - name: first_name
         description: Nombre del cliente.
       - name: last_name
@@ -20,12 +23,21 @@ models:
     columns:
       - name: order_id
         description: Identificador único de la orden.
+        tests:
+          - unique
+          - not_null
       - name: customer_id
         description: Referencia al cliente que hizo la orden.
+        tests:
+          - not_null
       - name: order_date
         description: Fecha en la que se realizó la orden.
       - name: order_status
         description: Estado de la orden (ej. placed, shipped, completed, returned).
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
 
   - name: stg_payments
     description: >
@@ -35,9 +47,18 @@ models:
     columns:
       - name: payment_id
         description: Identificador único del pago.
+        tests:
+          - unique
+          - not_null
       - name: order_id
         description: Referencia a la orden pagada.
+        tests:
+          - not_null
       - name: payment_method
         description: Método de pago utilizado.
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
       - name: payment_amount
         description: Monto pagado, en dólares (convertido desde centavos).
