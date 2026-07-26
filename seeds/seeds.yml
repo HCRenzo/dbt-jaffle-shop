@@ -1,0 +1,39 @@
+version: 2
+
+seeds:
+  - name: raw_customers
+    description: >
+      Datos crudos de clientes, sin transformar. Simula la capa bronze:
+      llega tal cual desde el sistema origen (en un pipeline real, esto
+      sería un source cargado por una herramienta de ingesta, no un seed).
+    columns:
+      - name: id
+        description: Identificador único del cliente en el sistema origen.
+      - name: first_name
+        description: Nombre del cliente.
+      - name: last_name
+        description: Apellido del cliente (abreviado en el dataset origen).
+
+  - name: raw_orders
+    description: Datos crudos de órdenes, sin transformar.
+    columns:
+      - name: id
+        description: Identificador único de la orden en el sistema origen.
+      - name: user_id
+        description: Referencia al id del cliente que hizo la orden.
+      - name: order_date
+        description: Fecha en la que se realizó la orden.
+      - name: status
+        description: Estado de la orden (ej. placed, shipped, completed, returned).
+
+  - name: raw_payments
+    description: Datos crudos de pagos, sin transformar.
+    columns:
+      - name: id
+        description: Identificador único del pago en el sistema origen.
+      - name: order_id
+        description: Referencia al id de la orden pagada.
+      - name: payment_method
+        description: Método de pago utilizado (ej. credit_card, coupon, bank_transfer, gift_card).
+      - name: amount
+        description: Monto pagado, expresado en centavos (ej. 1000 = $10.00).
