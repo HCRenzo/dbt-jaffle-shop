@@ -1,0 +1,20 @@
+version: 2
+
+snapshots:
+  - name: orders_snapshot
+    description: >
+      Historial SCD tipo 2 de raw_orders. Cada vez que order_status cambia
+      para un order_id, dbt cierra el registro anterior (dbt_valid_to) e
+      inserta uno nuevo (dbt_valid_from), en vez de sobreescribir. Resuelve
+      la pérdida de historial que provoca el reload completo de los seeds.
+    columns:
+      - name: order_id
+        description: Identificador único de la orden.
+      - name: order_status
+        description: Estado de la orden en el momento de esa versión.
+      - name: dbt_valid_from
+        description: Timestamp desde el cual esta versión del registro es válida.
+      - name: dbt_valid_to
+        description: >
+          Timestamp hasta el cual esta versión fue válida. NULL indica que
+          es la versión vigente actualmente.
