@@ -1,0 +1,19 @@
+version: 2
+
+exposures:
+  - name: customer_retention_dashboard
+    label: "Dashboard de Retención de Clientes"
+    type: dashboard
+    maturity: medium
+    url: https://bi.example.com/dashboards/customer-retention
+    description: >
+      Dashboard usado por Marketing y Customer Success para monitorear
+      retención: frecuencia de compra, customer_lifetime_value, y
+      clientes sin compras recientes (en riesgo de abandono). Se
+      refresca diariamente después de que corre el pipeline de dbt.
+    depends_on:
+      - ref('dim_customers')
+      - ref('fct_orders')
+    owner:
+      name: Equipo de Analytics
+      email: analytics@example.com
