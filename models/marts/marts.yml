@@ -11,6 +11,7 @@ models:
     config:
       contract:
         enforced: true
+      access: public
     columns:
       - name: order_id
         description: Identificador único de la orden.
@@ -44,6 +45,7 @@ models:
     config:
       contract:
         enforced: true
+      access: public
     columns:
       - name: customer_id
         description: Identificador único del cliente.
