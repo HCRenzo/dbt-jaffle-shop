@@ -8,14 +8,19 @@ models:
       order_id, filtrando por order_date > max(order_date) ya presente).
       Solo inserta/actualiza — no elimina filas que desaparecen de la
       fuente; requiere --full-refresh para reconciliar borrados.
+    config:
+      contract:
+        enforced: true
     columns:
       - name: order_id
         description: Identificador único de la orden.
+        data_type: integer
         tests:
           - unique
           - not_null
       - name: customer_id
         description: Referencia al cliente que hizo la orden (FK a dim_customers).
+        data_type: integer
         tests:
           - not_null
           - relationships:
@@ -24,30 +29,43 @@ models:
                 field: customer_id
       - name: order_date
         description: Fecha en la que se realizó la orden.
+        data_type: date
       - name: order_status
         description: Estado de la orden.
+        data_type: varchar
       - name: order_total
         description: Monto total pagado por la orden, en dólares.
+        data_type: double
 
   - name: dim_customers
     description: >
       Tabla de dimensión: un registro por cliente, con atributos
       descriptivos y métricas agregadas de sus órdenes. Grano: customer_id.
+    config:
+      contract:
+        enforced: true
     columns:
       - name: customer_id
         description: Identificador único del cliente.
+        data_type: integer
         tests:
           - unique
           - not_null
       - name: first_name
         description: Nombre del cliente.
+        data_type: varchar
       - name: last_name
         description: Apellido del cliente.
+        data_type: varchar
       - name: first_order_date
         description: Fecha de la primera orden del cliente. Null si nunca compró.
+        data_type: date
       - name: most_recent_order_date
         description: Fecha de la orden más reciente del cliente. Null si nunca compró.
+        data_type: date
       - name: number_of_orders
         description: Cantidad total de órdenes hechas por el cliente.
+        data_type: bigint
       - name: customer_lifetime_value
         description: Suma de todos los pagos del cliente a través de todas sus órdenes.
+        data_type: double

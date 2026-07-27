@@ -3,6 +3,7 @@
         materialized='incremental',
         unique_key='order_id',
         incremental_strategy='merge',
+        on_schema_change='fail',
     )
 }}
 
