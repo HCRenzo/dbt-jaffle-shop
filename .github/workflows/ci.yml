@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  DBT_PROFILES_DIR: .
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lint:
+    name: Lint (sqlfluff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install dbt packages
+        run: dbt deps
+
+      - name: Run sqlfluff
+        run: sqlfluff lint models/ tests/ snapshots/
+
+  build_and_test:
+    name: Build + test
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install dbt packages
+        run: dbt deps
+
+      - name: Download last known-good state from main
+        if: github.event_name == 'pull_request'
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: ci.yml
+          branch: main
+          name: dbt-state
+          path: state
+          if_no_artifact_found: warn
+
+      - name: Restore warehouse from main's last build
+        if: github.event_name == 'pull_request'
+        run: cp state/jaffle_shop.duckdb jaffle_shop.duckdb || true
+
+      - name: Slim build (only what changed, plus downstream)
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ -f state/manifest.json ]; then
+            echo "Baseline state found - running Slim CI"
+            dbt build --select state:modified+ --state state
+          else
+            echo "No baseline state found (first run) - building everything"
+            dbt build
+          fi
+
+      - name: Full build (refreshes the main baseline)
+        if: github.event_name == 'push'
+        run: dbt build
+
+      - name: Upload state for future Slim CI runs
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dbt-state
+          path: |
+            target/manifest.json
+            jaffle_shop.duckdb
+          retention-days: 30
