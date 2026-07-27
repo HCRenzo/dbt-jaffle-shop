@@ -33,6 +33,25 @@ jobs:
       - name: Run sqlfluff
         run: sqlfluff lint models/ tests/ snapshots/
 
+  project_evaluator:
+    name: Project structure audit (dbt-project-evaluator)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install dbt packages
+        run: dbt deps
+
+      - name: Run dbt-project-evaluator
+        run: dbt build --select package:dbt_project_evaluator
+
   build_and_test:
     name: Build + test
     runs-on: ubuntu-latest
