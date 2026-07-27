@@ -62,3 +62,7 @@ models:
                 values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
       - name: payment_amount
         description: Monto pagado, en dólares (convertido desde centavos).
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:
+                min_value: 0

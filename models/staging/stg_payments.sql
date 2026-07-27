@@ -10,7 +10,7 @@ renamed as (
         id as payment_id,
         order_id,
         payment_method,
-        amount / 100.0 as payment_amount
+        {{ cents_to_dollars('amount') }} as payment_amount
 
     from source
 

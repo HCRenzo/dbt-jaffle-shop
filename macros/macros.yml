@@ -1,0 +1,15 @@
+version: 2
+
+macros:
+  - name: cents_to_dollars
+    description: >
+      Convierte un valor en centavos a dólares, redondeado a la cantidad
+      de decimales indicada. Centraliza esta conversión de unidad para
+      no repetirla en cada modelo que la necesite.
+    arguments:
+      - name: column_name
+        type: string
+        description: Nombre de la columna (o expresión SQL) en centavos a convertir.
+      - name: decimal_places
+        type: integer
+        description: Cantidad de decimales a redondear. Por defecto 2.

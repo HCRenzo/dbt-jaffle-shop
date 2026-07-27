@@ -7,3 +7,4 @@ logs/
 *.duckdb
 *.duckdb.wal
 .user.yml
+.vscode/
