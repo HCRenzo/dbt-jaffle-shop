@@ -67,9 +67,9 @@ jobs:
       - name: Slim build (only what changed, plus downstream)
         if: github.event_name == 'pull_request'
         run: |
-          if [ -f state/manifest.json ]; then
+          if [ -f state/target/manifest.json ]; then
             echo "Baseline state found - running Slim CI"
-            dbt build --select state:modified+ --state state
+            dbt build --select state:modified+ --state state/target
           else
             echo "No baseline state found (first run) - building everything"
             dbt build
