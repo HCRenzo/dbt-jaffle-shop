@@ -4,7 +4,10 @@ models:
   - name: fct_orders
     description: >
       Tabla de hechos: un registro por orden, con el monto total pagado.
-      Grano: order_id.
+      Grano: order_id. Materializado como incremental (merge sobre
+      order_id, filtrando por order_date > max(order_date) ya presente).
+      Solo inserta/actualiza — no elimina filas que desaparecen de la
+      fuente; requiere --full-refresh para reconciliar borrados.
     columns:
       - name: order_id
         description: Identificador único de la orden.
