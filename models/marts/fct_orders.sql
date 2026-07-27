@@ -9,10 +9,10 @@
 
 with orders_payments as (
 
-    select * from {{ ref('int_orders_payments_joined') }}
+    select opj.* from {{ ref('int_orders_payments_joined') }} as opj
 
     {% if is_incremental() %}
-    where order_date > (select max(order_date) from {{ this }})
+        where opj.order_date > (select max(prev.order_date) from {{ this }} as prev)
     {% endif %}
 
 ),
